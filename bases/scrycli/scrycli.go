@@ -90,7 +90,9 @@ func Run(args []string) int {
 		mode = config.PagingNever
 	}
 
-	out := output.FromMode(mode, "", interactive, false, true)
+	// quit-if-one-screen (less -F) only in auto mode, like rubric/bat:
+	// --paging always must keep the pager open for short dumps.
+	out := output.FromMode(mode, "", interactive, false, mode == config.PagingAuto)
 	defer out.Close()
 
 	cfg := hexdump.Config{BytesPerRow: *width, GroupSize: *group, BaseOffset: offset, Color: useColor}
