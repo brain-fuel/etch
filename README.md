@@ -14,6 +14,12 @@ pager handling, terminal detection, and ANSI painting.
 ## Install
 
 ```sh
+go install goforge.dev/etch/cmd/...@latest   # both etch and scry
+```
+
+Or individually:
+
+```sh
 go install goforge.dev/etch/cmd/etch@latest
 go install goforge.dev/etch/cmd/scry@latest
 ```
