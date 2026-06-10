@@ -1,0 +1,5 @@
+# Bricks this project includes. Keep this in sync with the imports in main.go;
+# `goforge check` verifies that declared bricks match the ones actually imported.
+bricks:
+  - etchtui
+  - hexdump
