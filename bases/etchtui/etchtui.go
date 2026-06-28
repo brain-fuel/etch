@@ -19,8 +19,8 @@ import (
 	"goforge.dev/etch/components/hexdump"
 )
 
-// Version is stamped by the release; "dev" otherwise.
-var Version = "dev"
+// Version is the release version, overridable at build time.
+var Version = "0.1.2"
 
 const (
 	bytesPerRow = 16

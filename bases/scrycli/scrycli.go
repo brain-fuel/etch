@@ -17,8 +17,8 @@ import (
 	terminfo "goforge.dev/rubric/components/termdetect"
 )
 
-// Version is stamped by the release; "dev" otherwise.
-var Version = "dev"
+// Version is the release version, overridable at build time.
+var Version = "0.1.2"
 
 // maxStdinBytes caps how much of a non-seekable stdin stream is read when no
 // -n limit is given, so `cat /dev/zero | scry` cannot exhaust memory.
@@ -53,6 +53,10 @@ func Run(args []string) int {
 	}
 	if fs.NArg() > 1 {
 		fmt.Fprintln(os.Stderr, "scry: at most one file argument")
+		return 2
+	}
+	if err := validateOptions(*width, *group, *color, *paging); err != nil {
+		fmt.Fprintln(os.Stderr, "scry:", err)
 		return 2
 	}
 
@@ -102,6 +106,34 @@ func Run(args []string) int {
 		}
 	}
 	return 0
+}
+
+func validateOptions(width, group int, color, paging string) error {
+	if width <= 0 {
+		return fmt.Errorf("-w must be greater than zero")
+	}
+	if group <= 0 {
+		return fmt.Errorf("-g must be greater than zero")
+	}
+	if group > width {
+		return fmt.Errorf("-g must be less than or equal to -w")
+	}
+	if !oneOf(color, "auto", "always", "never") {
+		return fmt.Errorf("--color must be auto, always, or never")
+	}
+	if !oneOf(paging, "auto", "always", "never") {
+		return fmt.Errorf("--paging must be auto, always, or never")
+	}
+	return nil
+}
+
+func oneOf(got string, allowed ...string) bool {
+	for _, v := range allowed {
+		if got == v {
+			return true
+		}
+	}
+	return false
 }
 
 // parseSize parses a decimal or 0x-prefixed size flag; empty means def.
